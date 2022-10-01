@@ -55,37 +55,58 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void display7SEG(int num){
-	//leds with value of 0 will be turn on
-	//leds with value of 1 will be turn off
-	if (num == 0){ //1111 1111 1100 0000
-		GPIOB->ODR = 0xFFC0;
+	//outputs: SEG7 -> SEG0
+	//outputs with value of 0 (RESET) will be turn on
+	//outputs with value of 1 (SET) will be turn off
+	if (num == 0){ //100 0000
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin
+								|SEG3_Pin|SEG4_Pin|SEG5_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG6_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 1){ //1111 1111 1111 1001
-		GPIOB->ODR = 0xFFF9;
+	else if (num == 1){ //111 1001
+		HAL_GPIO_WritePin(GPIOB, SEG1_Pin|SEG2_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG3_Pin|SEG4_Pin
+								|SEG5_Pin|SEG6_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 2){ //1111 1111 1010 0100
-		GPIOB->ODR = 0xFFA4;
+	else if (num == 2){ //010 0100
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG3_Pin
+								|SEG4_Pin|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG2_Pin|SEG5_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 3){ //1111 1111 1011 0000
-		GPIOB->ODR = 0xFFB0;
+	else if (num == 3){ //011 0000
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin
+								|SEG3_Pin|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG4_Pin|SEG5_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 4){ //1111 1111 1001 1001
-		GPIOB->ODR = 0xFF99;
+	else if (num == 4){ //001 1001
+		HAL_GPIO_WritePin(GPIOB, SEG1_Pin|SEG2_Pin|SEG5_Pin
+								|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG3_Pin|SEG4_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 5){ //1111 1111 1001 0010
-		GPIOB->ODR = 0xFF92;
+	else if (num == 5){ //001 0010
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG2_Pin|SEG3_Pin
+								|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG1_Pin|SEG4_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 6){ //1111 1111 1000 0010
-		GPIOB->ODR = 0xFF82;
+	else if (num == 6){ //000 0010
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG2_Pin|SEG3_Pin
+								|SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG1_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 7){ //1111 1111 1111 1000
-		GPIOB->ODR = 0xFFF8;
+	else if (num == 7){ //111 1000
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG3_Pin|SEG4_Pin|SEG5_Pin
+								|SEG6_Pin, GPIO_PIN_SET);
 	}
-	else if (num == 8){ //1111 1111 1000 0000
-		GPIOB->ODR = 0xFF80;
+	else if (num == 8){ //000 0000
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin
+								|SEG3_Pin|SEG4_Pin|SEG5_Pin
+								|SEG6_Pin, GPIO_PIN_RESET);
 	}
-	else if (num == 9){ //1111 1111 1001 0000
-		GPIOB->ODR = 0xFF90;
+	else if (num == 9){ //001 0000
+		HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin
+								|SEG3_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOB, SEG4_Pin, GPIO_PIN_SET);
 	}
 }
 
@@ -243,8 +264,8 @@ static void MX_GPIO_Init(void)
                           |VERTICAL_YELLOW_Pin|VERTICAL_GREEN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, a_Pin|b_Pin|c_Pin|d_Pin
-                          |e_Pin|f_Pin|g_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
+                          |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : HORIZONTAL_RED_Pin HORIZONTAL_YELLOW_Pin HORIZONTAL_GREEN_Pin VERTICAL_RED_Pin
                            VERTICAL_YELLOW_Pin VERTICAL_GREEN_Pin */
@@ -255,10 +276,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : a_Pin b_Pin c_Pin d_Pin
-                           e_Pin f_Pin g_Pin */
-  GPIO_InitStruct.Pin = a_Pin|b_Pin|c_Pin|d_Pin
-                          |e_Pin|f_Pin|g_Pin;
+  /*Configure GPIO pins : SEG0_Pin SEG1_Pin SEG2_Pin SEG3_Pin
+                           SEG4_Pin SEG5_Pin SEG6_Pin */
+  GPIO_InitStruct.Pin = SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
+                          |SEG4_Pin|SEG5_Pin|SEG6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
